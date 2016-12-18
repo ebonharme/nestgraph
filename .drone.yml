@@ -1,0 +1,4 @@
+build:
+  image: php:cli
+  commands:
+    - php test.php

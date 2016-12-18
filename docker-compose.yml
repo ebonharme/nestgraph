@@ -1,5 +1,5 @@
 php:
-  build: .
+  image: php:fpm-alpine
   expose:
     - "9000:9000"
   links:
@@ -8,7 +8,7 @@ php:
     - data
 
 nginx:
-  image: nginx
+  image: nginx:alpine
   ports:
     - "80:80"
   links:
@@ -20,22 +20,12 @@ mysql:
   image: mysql:5.6
   ports:
     - "3306:3306"
-  volumes:
-    - ./config/my.cnf:/etc/mysql/conf.d/my.cnf
   volumes_from:
     - data
   environment:
     MYSQL_ROOT_PASSWORD: 
 
 data:
-  image: busybox
-  volumes:
-    # data
-    - /var/lib/mysql
-    # configs
-    - ./config/nginx/conf.d:/etc/nginx/conf.d
-    - ./config/php-fpm.conf:/usr/local/etc/php-fpm.conf
-    - ./comfig/php.ini:/usr/local/etc/php/conf.d/php.ini
-    # virtual hosts
-    - ./docroot:/var/www/html
+  build: .
+  env_file: .env
   command: /bin/true
